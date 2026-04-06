@@ -1,0 +1,32 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  margin-bottom: 20px;
+  position: relative;
+  display: inline-block;
+}
+
+.title::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 26%;
+  height: 2px;
+  background-color: var(--rust);
+  border-radius: 1px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

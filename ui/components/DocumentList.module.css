@@ -1,0 +1,136 @@
+.empty {
+  padding: 14px 0 6px;
+  border-top: var(--hairline);
+}
+
+.emptyPrimary {
+  font-size: 14px;
+  color: var(--muted-ink);
+  margin-bottom: 3px;
+}
+
+.emptyHint {
+  font-size: 12px;
+  color: var(--muted-ink);
+  opacity: 0.7;
+}
+
+.list {
+  list-style: none;
+  border-top: var(--hairline);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 0;
+  border-bottom: var(--hairline);
+  transition: padding 0.1s;
+}
+
+.item:hover {
+  background-color: color-mix(in srgb, var(--ink) 3%, transparent);
+  margin: 0 -6px;
+  padding-left: 6px;
+  padding-right: 6px;
+  border-radius: 4px;
+  border-bottom-color: transparent;
+}
+
+/* Custom checkbox */
+.checkWrapper {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.checkInput {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.checkmark {
+  display: block;
+  width: 15px;
+  height: 15px;
+  border: var(--border);
+  border-radius: 3px;
+  flex-shrink: 0;
+  transition: background-color 0.12s, border-color 0.12s;
+  position: relative;
+}
+
+.checkInput:checked + .checkmark {
+  background-color: var(--rust);
+  border-color: var(--rust);
+}
+
+.checkInput:checked + .checkmark::after {
+  content: '';
+  position: absolute;
+  top: 1.5px;
+  left: 4px;
+  width: 4px;
+  height: 7px;
+  border: 2px solid var(--paper);
+  border-top: none;
+  border-left: none;
+  transform: rotate(42deg);
+}
+
+.checkInput:focus-visible + .checkmark {
+  outline: 2px solid var(--rust);
+  outline-offset: 2px;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.filename {
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.meta {
+  font-size: 11px;
+  color: var(--muted-ink);
+  line-height: 1.3;
+}
+
+.statusReady {
+  color: var(--green);
+}
+
+.statusFailed {
+  color: var(--rust);
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  font-size: 11px;
+  color: var(--muted-ink);
+  padding: 2px 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 0.12s;
+  letter-spacing: 0.02em;
+}
+
+.removeBtn:hover {
+  color: var(--rust);
+}

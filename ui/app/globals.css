@@ -1,0 +1,73 @@
+:root {
+  --paper: #f0f0f0;
+  --card-blue: #bfe7e7;
+  --card-yellow: #fcefb4;
+  --card-pink: #f8c8cf;
+  --card-peach: #ffd8c4;
+  --card-mint: #d1f2d6;
+  --bg-color: #f7d2d2;
+  --grid-color: #e5b3b3;
+
+  --ink: #000000;
+  --muted-ink: #444444;
+  
+  --rust: #ee7c8b;
+  --rust-soft: #ffeff1;
+  --green: #8fdab6;
+  
+  --radius: 0px;
+  --border: 2px solid var(--ink);
+  --hairline: 1px solid var(--ink);
+  
+  --shadow-block: 3px 3px 0px var(--ink);
+  --shadow-block-hover: 1px 1px 0px var(--ink);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-ui), 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif;
+  background-color: var(--bg-color);
+  background-image: 
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 32px 32px;
+  color: var(--ink);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* Remove grain overlay as we are using a grid background */
+.grain-overlay {
+  display: none;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+  border-radius: 0;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 700;
+}
+
+input, textarea, select {
+  font-family: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

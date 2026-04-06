@@ -1,0 +1,281 @@
+.main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 40px 28px 80px;
+}
+
+.inner {
+  max-width: 740px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Back link */
+.back {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--rust);
+  text-decoration: none;
+  margin-bottom: 28px;
+  letter-spacing: 0.01em;
+}
+
+.back:hover {
+  text-decoration: underline;
+}
+
+/* Hero */
+.hero {
+  padding-bottom: 36px;
+}
+
+.kicker {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rust);
+  margin-bottom: 12px;
+}
+
+.heroTitle {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: -0.025em;
+  line-height: 1.12;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+
+.heroSub {
+  font-size: 20px;
+  line-height: 32px;
+  color: var(--ink);
+  max-width: 560px;
+}
+
+/* Divider */
+.rule {
+  height: 1px;
+  background-color: var(--ink);
+  opacity: 0.2;
+}
+
+/* Sections */
+.section {
+  padding: 36px 0;
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  margin-bottom: 22px;
+  position: relative;
+  display: inline-block;
+}
+
+.sectionTitle::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 24%;
+  height: 2px;
+  background-color: var(--rust);
+  border-radius: 1px;
+}
+
+/* Steps */
+.steps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.stepNum {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--rust);
+  opacity: 0.7;
+  flex-shrink: 0;
+  padding-top: 2px;
+  min-width: 24px;
+}
+
+.stepLabel {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+  letter-spacing: 0.01em;
+}
+
+.stepBody {
+  font-size: 18px;
+  line-height: 32px;
+  color: var(--ink);
+}
+
+/* Architecture diagram */
+.diagram {
+  background-color: var(--paper);
+  border: var(--border);
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  overflow-x: auto;
+}
+
+.diagRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.diagBox {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border: var(--border);
+  border-radius: 5px;
+  padding: 6px 12px;
+  background-color: var(--paper);
+  white-space: nowrap;
+}
+
+.diagStore {
+  background-color: var(--rust-soft);
+  border-color: color-mix(in srgb, var(--rust) 40%, transparent);
+  color: var(--rust);
+}
+
+.diagModel {
+  background-color: color-mix(in srgb, var(--ink) 8%, var(--paper));
+}
+
+.diagOutput {
+  font-family: var(--font-display);
+  font-style: italic;
+  background-color: color-mix(in srgb, var(--green) 10%, var(--paper));
+  border-color: color-mix(in srgb, var(--green) 40%, transparent);
+  color: var(--green);
+}
+
+.diagArrow {
+  font-size: 14px;
+  color: var(--muted-ink);
+  flex-shrink: 0;
+}
+
+.diagConnector {
+  width: 1px;
+  height: 14px;
+  background-color: var(--muted-ink);
+  opacity: 0.35;
+  margin: 0 0 0 45px;
+}
+
+/* Limitations */
+.limitList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.limitItem {
+  font-size: 18px;
+  line-height: 32px;
+  color: var(--ink);
+  padding-left: 14px;
+  border-left: 2px solid color-mix(in srgb, var(--ink) 15%, transparent);
+}
+
+.limitLabel {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* Stack grid */
+.stackGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.stackItem {
+  padding: 13px 16px;
+  border-bottom: var(--hairline);
+  border-right: var(--hairline);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.stackItem:nth-child(even) {
+  border-right: none;
+}
+
+.stackItem:nth-last-child(-n+2) {
+  border-bottom: none;
+}
+
+.stackTerm {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--rust);
+}
+
+.stackDef {
+  font-size: 16px;
+  color: var(--ink);
+  line-height: 32px;
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+  .main {
+    padding: 28px 18px 60px;
+  }
+
+  .stackGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .stackItem:nth-child(even) {
+    border-right: var(--hairline);
+  }
+
+  .stackItem:last-child {
+    border-bottom: none;
+  }
+
+  .stackItem:nth-last-child(-n+2) {
+    border-bottom: var(--hairline);
+  }
+}

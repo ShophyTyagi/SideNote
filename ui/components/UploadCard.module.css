@@ -1,0 +1,157 @@
+.card {
+  border: var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background-color: var(--card-yellow);
+  box-shadow: var(--shadow-block);
+}
+
+.dropzone {
+  border: 1.5px dashed var(--muted-ink);
+  border-radius: calc(var(--radius) - 2px);
+  padding: 26px 20px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+  text-align: center;
+  user-select: none;
+}
+
+.dropzone:hover,
+.dragging {
+  border-color: var(--ink);
+  background-color: var(--rust-soft);
+}
+
+.dropIcon {
+  font-size: 20px;
+  line-height: 1;
+  color: var(--muted-ink);
+  transition: transform 0.15s ease;
+}
+
+.dropzone:hover .dropIcon,
+.dragging .dropIcon {
+  transform: translateY(-3px);
+  color: var(--rust);
+}
+
+.dropText {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.orLine {
+  font-size: 13px;
+  color: var(--muted-ink);
+}
+
+.chooseLink {
+  color: var(--rust);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Upload list */
+.uploadList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.uploadRow {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.uploadMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.uploadFilename {
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+
+.uploadStatus {
+  font-size: 12px;
+  color: var(--muted-ink);
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.statusFailed {
+  color: var(--rust);
+}
+
+.progressTrack {
+  height: 2px;
+  background-color: color-mix(in srgb, var(--ink) 12%, transparent);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: var(--ink);
+  border-radius: 2px;
+  transition: width 0.25s ease;
+}
+
+.indexingPulse {
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  background-color: var(--rust);
+  border-radius: 2px;
+  animation: slide 1.5s ease-in-out infinite;
+}
+
+@keyframes slide {
+  0%   { left: -40%; }
+  100% { left: 110%; }
+}
+
+.uploadError {
+  font-size: 12px;
+  color: var(--rust);
+  line-height: 1.45;
+}
+
+.validationError {
+  font-size: 12px;
+  color: var(--rust);
+  line-height: 1.45;
+}
+
+.caption {
+  font-size: 12px;
+  color: var(--muted-ink);
+  line-height: 1.45;
+  opacity: 0.85;
+}
+
+.hiddenInput {
+  display: none;
+}

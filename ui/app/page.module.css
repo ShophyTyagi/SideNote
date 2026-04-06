@@ -1,0 +1,56 @@
+.main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 28px 28px 72px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 4fr 8fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.libraryCol {
+  position: sticky;
+  top: 78px; /* below sticky header */
+  max-height: calc(100vh - 90px);
+  overflow-y: auto;
+  /* hide scrollbar but allow scroll */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.libraryCol::-webkit-scrollbar {
+  display: none;
+}
+
+.askCol {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Tablet: single column */
+@media (max-width: 1023px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .libraryCol {
+    position: static;
+    max-height: none;
+    overflow-y: visible;
+  }
+}
+
+@media (max-width: 767px) {
+  .main {
+    padding: 20px 18px 56px;
+  }
+
+  .grid {
+    gap: 16px;
+  }
+}

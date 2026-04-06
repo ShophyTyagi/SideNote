@@ -1,0 +1,130 @@
+.block {
+  border: var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: var(--card-peach);
+  box-shadow: var(--shadow-block);
+  min-height: 110px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  position: relative;
+  display: inline-block;
+}
+
+.title::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 26%;
+  height: 2px;
+  background-color: var(--rust);
+  border-radius: 1px;
+}
+
+.idle {
+  font-size: 14px;
+  color: var(--muted-ink);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* Skeleton shimmer */
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding-top: 2px;
+}
+
+.skLine {
+  height: 13px;
+  border-radius: 3px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--ink) 7%, transparent) 0%,
+    color-mix(in srgb, var(--ink) 13%, transparent) 40%,
+    color-mix(in srgb, var(--ink) 7%, transparent) 80%
+  );
+  background-size: 250% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+.skFull  { width: 100%; }
+.skLong  { width: 88%; }
+.skMed   { width: 70%; }
+.skShort { width: 48%; }
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Error state */
+.errorState {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.errorText {
+  font-size: 14px;
+  color: var(--rust);
+  line-height: 1.5;
+}
+
+.retryBtn {
+  background: none;
+  border: var(--border);
+  border-radius: calc(var(--radius) - 4px);
+  padding: 6px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  transition: box-shadow 0.12s;
+}
+
+.retryBtn:hover {
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+/* Answer body */
+.body {
+  max-width: 68ch;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.paragraph {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink);
+}
+
+/* Footer meta */
+.footer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted-ink);
+  padding-top: 10px;
+  border-top: var(--hairline);
+  letter-spacing: 0.01em;
+}
+
+.dot {
+  opacity: 0.45;
+}
