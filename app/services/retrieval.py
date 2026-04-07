@@ -15,7 +15,4 @@ def retrieve_chunks(question: str, document_ids: list = None, top_k: int = 10) -
             k=top_k,
         )
 
-    for i, chunk in enumerate(results):
-        print(f"CHUNK {i}: {chunk.page_content[:150]}")
-
     return results

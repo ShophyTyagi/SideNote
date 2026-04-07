@@ -13,18 +13,22 @@ from app.config import settings
 router = APIRouter()
 client = Anthropic(api_key=settings.anthropic_api_key)
 
+# Claude Opus 4.5 pricing (per million tokens, as of 2025)
+COST_PER_M_INPUT  = 3.00   # USD
+COST_PER_M_OUTPUT = 15.00  # USD
+
+def estimate_cost(input_tokens: int, output_tokens: int) -> float:
+    return round(
+        (input_tokens  / 1_000_000) * COST_PER_M_INPUT +
+        (output_tokens / 1_000_000) * COST_PER_M_OUTPUT,
+        6
+    )
+
 class BenchmarkRequest(BaseModel):
     question: str
     document_ids: Optional[list[str]] = None
     top_k: Optional[int] = 10
 
-def vanilla_answer(question: str) -> dict:
-    response = client.messages.create(
-        model="claude-opus-4-5",
-        max_tokens=1024,
-        messages=[{"role": "user", "content": question}],
-    )
-    return {"answer": response.content[0].text.strip(), "citations": []}
 
 def judge_groundedness(question: str, rag_answer: str, context: str) -> dict:
     prompt = f"""You are an evaluator. Given a question, a context, and an answer, score whether the answer is grounded in the context.
@@ -72,11 +76,17 @@ def benchmark(request: BenchmarkRequest):
     chunks = retrieve_chunks(request.question, request.document_ids, request.top_k)
     rag_result = generate_answer(request.question, chunks)
     rag_latency = int((time.time() - rag_start) * 1000)
+    rag_usage = rag_result.pop("_usage", {})
 
     # Vanilla answer
     vanilla_start = time.time()
-    vanilla_result = vanilla_answer(request.question)
+    vanilla_response = client.messages.create(
+        model="claude-opus-4-5",
+        max_tokens=1024,
+        messages=[{"role": "user", "content": request.question}],
+    )
     vanilla_latency = int((time.time() - vanilla_start) * 1000)
+    vanilla_usage = vanilla_response.usage
 
     # Judge
     context = build_context(chunks)
@@ -90,15 +100,27 @@ def benchmark(request: BenchmarkRequest):
                 "latency_ms": rag_latency,
                 "retrieved_k": len(chunks),
                 "model": "claude-opus-4-5",
+                "input_tokens": rag_usage.get("input_tokens"),
+                "output_tokens": rag_usage.get("output_tokens"),
+                "estimated_cost_usd": estimate_cost(
+                    rag_usage.get("input_tokens", 0),
+                    rag_usage.get("output_tokens", 0)
+                ),
             }
         },
         "vanilla": {
-            "answer": vanilla_result["answer"],
+            "answer": vanilla_response.content[0].text.strip(),
             "citations": [],
             "metrics": {
                 "latency_ms": vanilla_latency,
                 "retrieved_k": 0,
                 "model": "claude-opus-4-5",
+                "input_tokens": vanilla_usage.input_tokens,
+                "output_tokens": vanilla_usage.output_tokens,
+                "estimated_cost_usd": estimate_cost(
+                    vanilla_usage.input_tokens,
+                    vanilla_usage.output_tokens
+                ),
             }
         },
         "evaluation": evaluation

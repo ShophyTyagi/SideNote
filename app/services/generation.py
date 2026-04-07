@@ -33,9 +33,7 @@ def build_context(chunks: list) -> str:
 
 def generate_answer(question: str, chunks: list) -> dict:
     context = build_context(chunks)
-
-    user_message = f"""Context:
-{context}
+    user_message = f"""Context: {context}
 
 Question: {question}
 
@@ -49,8 +47,6 @@ Answer strictly from the context above. Return JSON only."""
     )
 
     raw = response.content[0].text.strip()
-
-    # Strip markdown code fences if Claude added them
     raw = re.sub(r"^```(?:json)?\s*", "", raw)
     raw = re.sub(r"\s*```$", "", raw)
     raw = raw.strip()
@@ -58,11 +54,13 @@ Answer strictly from the context above. Return JSON only."""
     try:
         parsed = json.loads(raw)
     except json.JSONDecodeError:
-        parsed = {
-            "answer": raw,
-            "citations": []
-        }
+        parsed = {"answer": raw, "citations": []}
+
+    # Return usage alongside the answer
+    parsed["_usage"] = {
+        "input_tokens": response.usage.input_tokens,
+        "output_tokens": response.usage.output_tokens,
+    }
 
     logger.info(f"Generating answer for question: {question[:60]}")
-
     return parsed
