@@ -1,5 +1,6 @@
 import json
 import re
+import ollama
 from anthropic import Anthropic
 from app.config import settings
 import logging
@@ -63,4 +64,39 @@ Answer strictly from the context above. Return JSON only."""
     }
 
     logger.info(f"Generating answer for question: {question[:60]}")
+    return parsed
+
+def generate_answer_ollama(question: str, chunks: list, model: str = "llama3.2") -> dict:
+    context = build_context(chunks)
+    user_message = f"""Context: {context}
+
+Question: {question}
+
+Answer strictly from the context above. Return JSON only."""
+
+    ollama_client = ollama.Client(host=settings.ollama_host)
+    response = ollama_client.chat(
+        model=model,
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": user_message},
+        ],
+    )
+
+    raw = response.message.content.strip()
+    raw = re.sub(r"^```(?:json)?\s*", "", raw)
+    raw = re.sub(r"\s*```$", "", raw)
+    raw = raw.strip()
+
+    try:
+        parsed = json.loads(raw)
+    except json.JSONDecodeError:
+        parsed = {"answer": raw, "citations": []}
+
+    parsed["_usage"] = {
+        "input_tokens": response.prompt_eval_count or 0,
+        "output_tokens": response.eval_count or 0,
+    }
+
+    logger.info(f"Ollama answer for question: {question[:60]}")
     return parsed

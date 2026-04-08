@@ -7,7 +7,7 @@ from typing import Optional
 
 from anthropic import Anthropic
 from app.services.retrieval import retrieve_chunks
-from app.services.generation import generate_answer, build_context
+from app.services.generation import generate_answer, generate_answer_ollama, build_context
 from app.config import settings
 
 router = APIRouter()
@@ -88,12 +88,18 @@ def benchmark(request: BenchmarkRequest):
     vanilla_latency = int((time.time() - vanilla_start) * 1000)
     vanilla_usage = vanilla_response.usage
 
-    # Judge
+    # Ollama RAG answer
+    ollama_start = time.time()
+    ollama_result = generate_answer_ollama(request.question, chunks)
+    ollama_latency = int((time.time() - ollama_start) * 1000)
+    ollama_usage = ollama_result.pop("_usage", {})
+
+    # Judge (use Claude RAG answer as reference)
     context = build_context(chunks)
     evaluation = judge_groundedness(request.question, rag_result.get("answer", ""), context)
 
     return {
-        "rag": {
+        "rag_claude": {
             "answer": rag_result.get("answer"),
             "citations": rag_result.get("citations", []),
             "metrics": {
@@ -108,7 +114,19 @@ def benchmark(request: BenchmarkRequest):
                 ),
             }
         },
-        "vanilla": {
+        "rag_ollama": {
+            "answer": ollama_result.get("answer"),
+            "citations": ollama_result.get("citations", []),
+            "metrics": {
+                "latency_ms": ollama_latency,
+                "retrieved_k": len(chunks),
+                "model": "llama3.2",
+                "input_tokens": ollama_usage.get("input_tokens"),
+                "output_tokens": ollama_usage.get("output_tokens"),
+                "estimated_cost_usd": 0.0,
+            }
+        },
+        "vanilla_claude": {
             "answer": vanilla_response.content[0].text.strip(),
             "citations": [],
             "metrics": {

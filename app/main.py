@@ -1,6 +1,6 @@
 import logging
 from fastapi import FastAPI
-from app.routes import documents, qa, benchmark, redteam
+from app.routes import documents, qa, benchmark, redteam, agent
 
 logging.basicConfig(
     level=logging.INFO,
@@ -16,7 +16,8 @@ app = FastAPI(
 app.include_router(documents.router, prefix="/v1")
 app.include_router(qa.router, prefix="/v1")
 app.include_router(benchmark.router, prefix="/v1")
-app.include_router(redteam.router, prefix="/v1") 
+app.include_router(redteam.router, prefix="/v1")
+app.include_router(agent.router, prefix="/v1")
 
 @app.get("/health")
 def health():
