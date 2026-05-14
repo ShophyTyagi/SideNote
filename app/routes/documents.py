@@ -4,7 +4,7 @@ import tempfile
 
 from fastapi import APIRouter, UploadFile, File, HTTPException
 
-from app.services.ingestion import ingest_document, load_registry, save_registry, get_vector_store
+from app.services.ingestion import ingest_document, load_registry, save_registry, delete_document_chunks
 
 router = APIRouter()
 
@@ -43,8 +43,7 @@ def delete_document(document_id: str):
     if document_id not in registry:
         raise HTTPException(status_code=404, detail="Document not found.")
 
-    vector_store = get_vector_store()
-    vector_store.delete(where={"document_id": document_id})
+    delete_document_chunks(document_id)
 
     del registry[document_id]
     save_registry(registry)

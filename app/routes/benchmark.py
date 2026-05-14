@@ -2,7 +2,7 @@ import time
 import json
 import re
 from fastapi import APIRouter
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from typing import Optional
 
 from anthropic import Anthropic
@@ -28,6 +28,20 @@ class BenchmarkRequest(BaseModel):
     question: str
     document_ids: Optional[list[str]] = None
     top_k: Optional[int] = 10
+
+    @validator('question')
+    def validate_question(cls, v):
+        if not v.strip():
+            raise ValueError('Question cannot be empty.')
+        if len(v) > 2000:
+            raise ValueError('Question too long. Max 2000 characters.')
+        return v.strip()
+
+    @validator('top_k')
+    def validate_top_k(cls, v):
+        if v < 1 or v > 20:
+            raise ValueError('top_k must be between 1 and 20.')
+        return v
 
 
 def judge_groundedness(question: str, rag_answer: str, context: str) -> dict:
@@ -94,9 +108,11 @@ def benchmark(request: BenchmarkRequest):
     ollama_latency = int((time.time() - ollama_start) * 1000)
     ollama_usage = ollama_result.pop("_usage", {})
 
-    # Judge (use Claude RAG answer as reference)
+    # Judge all three answers against the retrieved context
     context = build_context(chunks)
-    evaluation = judge_groundedness(request.question, rag_result.get("answer", ""), context)
+    eval_rag_claude  = judge_groundedness(request.question, rag_result.get("answer", ""), context)
+    eval_rag_ollama  = judge_groundedness(request.question, ollama_result.get("answer", ""), context)
+    eval_vanilla     = judge_groundedness(request.question, vanilla_response.content[0].text.strip(), context)
 
     return {
         "rag_claude": {
@@ -112,7 +128,8 @@ def benchmark(request: BenchmarkRequest):
                     rag_usage.get("input_tokens", 0),
                     rag_usage.get("output_tokens", 0)
                 ),
-            }
+            },
+            "evaluation": eval_rag_claude,
         },
         "rag_ollama": {
             "answer": ollama_result.get("answer"),
@@ -124,7 +141,8 @@ def benchmark(request: BenchmarkRequest):
                 "input_tokens": ollama_usage.get("input_tokens"),
                 "output_tokens": ollama_usage.get("output_tokens"),
                 "estimated_cost_usd": 0.0,
-            }
+            },
+            "evaluation": eval_rag_ollama,
         },
         "vanilla_claude": {
             "answer": vanilla_response.content[0].text.strip(),
@@ -139,7 +157,7 @@ def benchmark(request: BenchmarkRequest):
                     vanilla_usage.input_tokens,
                     vanilla_usage.output_tokens
                 ),
-            }
+            },
+            "evaluation": eval_vanilla,
         },
-        "evaluation": evaluation
     }

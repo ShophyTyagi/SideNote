@@ -5,7 +5,7 @@ from datetime import datetime
 import logging
 logger = logging.getLogger(__name__)
 
-from langchain_community.document_loaders import PyMuPDFLoader
+from langchain_community.document_loaders import PyMuPDFLoader, TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
@@ -32,11 +32,24 @@ def save_registry(registry: dict):
     with open(DOCUMENTS_REGISTRY, "w") as f:
         json.dump(registry, f, indent=2)
 
+def delete_document_chunks(document_id: str) -> int:
+    vector_store = get_vector_store()
+    results = vector_store._collection.get(where={"document_id": document_id})
+    ids = results.get("ids", [])
+    if ids:
+        vector_store._collection.delete(ids=ids)
+    return len(ids)
+
+
 def ingest_document(file_path: str, filename: str) -> dict:
     document_id = str(uuid.uuid4())
 
     # 1. Load
-    loader = PyMuPDFLoader(file_path)
+    ext = os.path.splitext(filename)[1].lower()
+    if ext == ".pdf":
+        loader = PyMuPDFLoader(file_path)
+    else:
+        loader = TextLoader(file_path, encoding="utf-8")
     pages = loader.load()
 
     # 2. Chunk

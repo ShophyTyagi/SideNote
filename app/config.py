@@ -4,6 +4,7 @@ class Settings(BaseSettings):
     anthropic_api_key: str
     chroma_persist_dir: str = "./app/data/chroma"
     ollama_host: str = "http://localhost:11434"
+    allowed_origins: str = "http://localhost:3000"
 
     class Config:
         env_file = ".env"

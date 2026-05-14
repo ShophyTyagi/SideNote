@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 client = Anthropic(api_key=settings.anthropic_api_key)
 
-SYSTEM_PROMPT = """You are a document analysis assistant. 
+SYSTEM_PROMPT = """You are a document analysis assistant.
 Answer questions strictly based on the provided context chunks.
 If the context does not contain enough information to answer, respond with exactly:
 "I don't know based on the provided documents."
@@ -24,6 +24,7 @@ Always respond in this exact JSON format:
   ]
 }
 
+The answer must be plain prose only. No markdown, no headers, no bullet points, no bold or italic formatting.
 Do not include anything outside the JSON."""
 
 def build_context(chunks: list) -> str:
@@ -83,7 +84,8 @@ Answer strictly from the context above. Return JSON only."""
         ],
     )
 
-    raw = response.message.content.strip()
+    msg = response.message if hasattr(response, "message") else response["message"]
+    raw = (msg.content if hasattr(msg, "content") else msg["content"]).strip()
     raw = re.sub(r"^```(?:json)?\s*", "", raw)
     raw = re.sub(r"\s*```$", "", raw)
     raw = raw.strip()
@@ -93,9 +95,12 @@ Answer strictly from the context above. Return JSON only."""
     except json.JSONDecodeError:
         parsed = {"answer": raw, "citations": []}
 
+    def _get(key):
+        return (response.get(key, 0) if isinstance(response, dict) else getattr(response, key, 0)) or 0
+
     parsed["_usage"] = {
-        "input_tokens": response.prompt_eval_count or 0,
-        "output_tokens": response.eval_count or 0,
+        "input_tokens": _get("prompt_eval_count"),
+        "output_tokens": _get("eval_count"),
     }
 
     logger.info(f"Ollama answer for question: {question[:60]}")

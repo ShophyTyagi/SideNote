@@ -1,4 +1,5 @@
 const BASE = '/api'
+const DIRECT = 'http://localhost:8000'
 
 export async function healthCheck(): Promise<{ status: string; chroma: string }> {
   const res = await fetch(`${BASE}/health`, { cache: 'no-store' })
@@ -50,7 +51,7 @@ export function uploadDocument(
     xhr.addEventListener('error', () => reject(new Error('Network error during upload')))
     xhr.addEventListener('abort', () => reject(new Error('Upload cancelled')))
 
-    xhr.open('POST', `${BASE}/v1/documents`)
+    xhr.open('POST', `${DIRECT}/v1/documents`)
     xhr.send(formData)
   })
 

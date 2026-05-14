@@ -1,6 +1,8 @@
 import logging
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.routes import documents, qa, benchmark, redteam, agent
+from app.config import settings
 
 logging.basicConfig(
     level=logging.INFO,
@@ -11,6 +13,13 @@ app = FastAPI(
     title="SideNote",
     description="Document Q&A API with RAG, citations, and grounding evaluation.",
     version="0.1.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.allowed_origins.split(","),
+    allow_methods=["GET", "POST", "DELETE"],
+    allow_headers=["Content-Type"],
 )
 
 app.include_router(documents.router, prefix="/v1")
